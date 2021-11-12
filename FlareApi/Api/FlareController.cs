@@ -7,10 +7,11 @@ using FlareApi.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace FlareApi.Api.V1
+namespace FlareApi.Api
 {
     public class FlareController : ControllerBase
     {
+        [NonAction]
         public int GetAccessLevel()
         {
             var claim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
