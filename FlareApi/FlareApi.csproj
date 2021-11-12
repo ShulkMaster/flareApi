@@ -24,7 +24,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Api\V1\Responses" />
       <Folder Include="Repository" />
     </ItemGroup>
 
