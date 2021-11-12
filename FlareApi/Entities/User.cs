@@ -10,6 +10,7 @@ namespace FlareApi.Entities
     #region Constants
 
         public const int UenLenght = 12;
+        public const int UenMinLenght = 6;
         public const int NameLenght = 150;
         public const int LastNameLenght = 150;
         public const int PasswordLenght = 64;
