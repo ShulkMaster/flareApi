@@ -36,7 +36,7 @@ namespace FlareApi.Service
             {
                 Subject = identity,
                 Expires = DateTime.UtcNow.AddMinutes(15),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(_settings.getEncodeSecret()),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(_settings.GetEncodeSecret()),
                     SecurityAlgorithms.HmacSha256Signature),
             };
             SecurityToken token = handler.CreateToken(descriptor);
@@ -50,7 +50,7 @@ namespace FlareApi.Service
                 ValidateAudience = false,
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(_settings.getEncodeSecret()),
+                IssuerSigningKey = new SymmetricSecurityKey(_settings.GetEncodeSecret()),
                 ValidateLifetime = false //here we are saying that we don't care about the token's expiration date
             };
 

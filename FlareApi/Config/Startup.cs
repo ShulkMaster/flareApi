@@ -1,11 +1,13 @@
-using System;
 using AutoWrapper;
+using FlareApi.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace FlareApi.Config
 {
@@ -19,38 +21,32 @@ namespace FlareApi.Config
         public IConfiguration Configuration { get; }
 
 
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(
+            IServiceCollection services,
+            IWebHostEnvironment env,
+            ILoggerFactory loggerFactory)
         {
             var settings = new Settings();
+            var serilog = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .WriteTo
+                .File("logs/flare.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
             Configuration.GetSection(nameof(Settings)).Bind(settings);
+            loggerFactory.AddSerilog(serilog);
             services.AddMiddleware(settings);
             services.AddServiceLayer();
+            services.AddSwag();
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllers();
-            services.AddSwaggerGen(options =>
+            services.AddDbContext<FlareContext>(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "FlareApi", Version = "v1" });
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                options.UseMySQL(settings.ConnectionString, config => config.CommandTimeout(120))
+                    .UseLoggerFactory(loggerFactory);
+                if (env.IsDevelopment())
                 {
-                    Description = "JWT Authorization header using the Bearer scheme.",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey
-                });
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
-                });
+                    options.EnableSensitiveDataLogging().EnableDetailedErrors();
+                }
             });
         }
 
