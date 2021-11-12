@@ -1,15 +1,20 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.Json.Serialization;
 using FlareApi.Api;
+using FlareApi.Service;
+using FlareApi.Service.Driver;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FlareApi.Config
 {
     public static class ServiceRegister
     {
-        public static void AddServiceLayer(this IServiceCollection services, Settings settings)
+        public static void AddMiddleware(this IServiceCollection services, Settings settings)
         {
             services.AddSingleton(settings);
             services.AddControllers()
@@ -40,8 +45,34 @@ namespace FlareApi.Config
                         return new BadRequestObjectResult(list);
                     };
                 });
-            //services.AddScoped<ISessionService, SessionService>();
-            //services.AddScoped<ITokenService, TokenService>();
+            services.AddAuthentication(s =>
+                {
+                    s.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    s.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    s.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(token =>
+                {
+                    token.SaveToken = true;
+                    token.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(settings.getEncodeSecret()),
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromMinutes(1)
+                    };
+                });
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy(nameof(FlarePolicy), policy => { policy.RequireRole(FlarePolicy.Roles); });
+            });
+        }
+
+        public static void AddServiceLayer(this IServiceCollection services)
+        {
+            services.AddScoped<ITokenService, TokenService>();
             services.AddAutoMapper(typeof(Startup));
         }
     }

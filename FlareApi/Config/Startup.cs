@@ -1,3 +1,5 @@
+using System;
+using AutoWrapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -16,20 +18,43 @@ namespace FlareApi.Config
 
         public IConfiguration Configuration { get; }
 
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             var settings = new Settings();
             Configuration.GetSection(nameof(Settings)).Bind(settings);
-            services.AddServiceLayer(settings);
+            services.AddMiddleware(settings);
+            services.AddServiceLayer();
+            services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllers();
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FlareApi", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "FlareApi", Version = "v1" });
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme.",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
         }
 
-        
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -40,7 +65,7 @@ namespace FlareApi.Config
             }
 
             app.UseHttpsRedirection();
-
+            app.UseApiResponseAndExceptionWrapper();
             app.UseRouting();
 
             app.UseAuthorization();
