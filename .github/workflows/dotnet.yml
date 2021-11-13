@@ -2,8 +2,7 @@ name: .NET
 
 env:
   buildConfig: 'Release'
-  runtime: 'ubuntu-x86'
-  Api: ' .\FlareApi\FlareApi.csproj'
+  Api: ' ./FlareApi/FlareApi.csproj'
 
 on:
   push:
@@ -14,7 +13,7 @@ on:
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -23,13 +22,13 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore $Api -r ${{runtime}}
+      run: dotnet restore $Api
     - name: Build
-      run: dotnet build $Api --no-restore -c $buildConfig -r $runtime --self-contained false
+      run: dotnet build $Api --no-restore -c $buildConfig
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish $Api --no-build -c $buildConfig -r $runtime -o deploy --self-contained false
+      run: dotnet publish $Api --no-build -c $buildConfig -o deploy
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v2.2.4
       with:
