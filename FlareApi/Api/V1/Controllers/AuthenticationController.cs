@@ -23,7 +23,6 @@ namespace FlareApi.Api.V1.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiProblemDetailsException), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] SessionRequest request, [FromServices] IMapper mapper)
         {
             var user = await _repo.FindUserAsync(request.Uen);

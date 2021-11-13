@@ -13,18 +13,18 @@ namespace FlareApi.Config
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _env;
+        public IConfiguration Configuration { get; }
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
+            _env = env;
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
 
 
-        public void ConfigureServices(
-            IServiceCollection services,
-            IWebHostEnvironment env,
-            ILoggerFactory loggerFactory)
+        public void ConfigureServices(IServiceCollection services)
         {
             var settings = new Settings();
             var serilog = new LoggerConfiguration()
@@ -33,6 +33,7 @@ namespace FlareApi.Config
                 .File("logs/flare.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
             Configuration.GetSection(nameof(Settings)).Bind(settings);
+            var loggerFactory = new LoggerFactory();
             loggerFactory.AddSerilog(serilog);
             services.AddMiddleware(settings);
             services.AddServiceLayer();
@@ -43,7 +44,7 @@ namespace FlareApi.Config
             {
                 options.UseMySQL(settings.ConnectionString, config => config.CommandTimeout(120))
                     .UseLoggerFactory(loggerFactory);
-                if (env.IsDevelopment())
+                if (_env.IsDevelopment())
                 {
                     options.EnableSensitiveDataLogging().EnableDetailedErrors();
                 }
