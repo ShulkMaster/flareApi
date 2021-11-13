@@ -64,7 +64,6 @@ namespace FlareApi.Config
             app.UseHttpsRedirection();
             app.UseApiResponseAndExceptionWrapper(new AutoWrapperOptions
             {
-                UseApiProblemDetailsException = true,
                 IsDebug = env.IsDevelopment(),
             });
             app.UseRouting();

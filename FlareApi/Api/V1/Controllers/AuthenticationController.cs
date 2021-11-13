@@ -28,18 +28,12 @@ namespace FlareApi.Api.V1.Controllers
             var user = await _repo.FindUserAsync(request.Uen);
             if (user is null)
             {
-                return new NotFoundObjectResult(new ApiProblemDetailsException(StatusCodes.Status404NotFound)
-                {
-                    Data = { { "error", $"User with UEN {request.Uen} not found" } }
-                });
+                return NotFound($"User with UEN {request.Uen} not found");
             }
 
             if (user.Password != request.Password)
             {
-                return new UnauthorizedObjectResult(new ApiProblemDetailsException(StatusCodes.Status401Unauthorized)
-                {
-                    Data = { { "error", $"User name/password combination is not correct" } }
-                });
+                return Unauthorized($"User name/password combination is not correct");
             }
 
             var (token, refresh) = await _repo.CreateSessionAsync(user);
