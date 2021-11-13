@@ -1,0 +1,38 @@
+name: .NET
+
+env:
+  buildConfig: 'Release'
+  runtime: 'ubuntu-x86'
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore -r $runtime
+    - name: Build
+      run: dotnet build --no-restore -c $buildConfig -r $runtime
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: Publish
+      run: dotnet publish --no-build -c $buildConfig -o deploy
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        # Artifact name
+        name: artifact
+        path: 'deploy'
+        retention-days: 31
