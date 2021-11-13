@@ -65,6 +65,7 @@ namespace FlareApi.Config
             app.UseApiResponseAndExceptionWrapper(new AutoWrapperOptions
             {
                 IsDebug = env.IsDevelopment(),
+                UseCustomSchema = true
             });
             app.UseRouting();
 

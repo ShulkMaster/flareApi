@@ -23,7 +23,7 @@ namespace FlareApi.Api
             };
         }
         
-        public static async Task<(List<T>, Metadata)> Paginate<T>(
+        public static async Task<(IEnumerable<T>, Metadata)> Paginate<T>(
             IOrderedQueryable<T> queryable,
             PaginationRequest pagination)
         {
@@ -35,7 +35,7 @@ namespace FlareApi.Api
 
             var total = queryable.Count();
             var enumerable = queryable.Skip(pagination.Size * (pagination.Page - 1)).Take(pagination.Size);
-            var list = await enumerable.ToListAsync();
+            var list = await enumerable.ToArrayAsync();
             return (list, new Metadata(pagination, total));
         }
     }
