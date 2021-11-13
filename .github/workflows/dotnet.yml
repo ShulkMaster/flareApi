@@ -23,7 +23,7 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore $Api -r $runtime
+      run: dotnet restore $Api -r ${{runtime}}
     - name: Build
       run: dotnet build $Api --no-restore -c $buildConfig -r $runtime --self-contained false
     - name: Test
