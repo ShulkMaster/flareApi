@@ -35,7 +35,7 @@ namespace FlareApi.Service
             var descriptor = new SecurityTokenDescriptor
             {
                 Subject = identity,
-                Expires = DateTime.UtcNow.AddMinutes(15),
+                Expires = DateTime.UtcNow.AddMinutes(5),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(_settings.GetEncodeSecret()),
                     SecurityAlgorithms.HmacSha256Signature),
             };
