@@ -10,7 +10,7 @@ namespace FlareApi.Entities
         
         public DateTime Expiration { get; set; }
         
-        [ForeignKey(nameof(User.Uen))]
+        [ForeignKey(nameof(Entities.User.Uen))]
         public string Uen { get; set; } = string.Empty;
 
         public virtual User User { get; set; } = null!;

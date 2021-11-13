@@ -20,18 +20,18 @@ namespace FlareApi.Entities
 
         [Key]
         [MaxLength(UenLenght)]
-        public string Uen { get; set; }
+        public string Uen { get; set; } = string.Empty;
 
         [MaxLength(NameLenght)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [MaxLength(LastNameLenght)]
-        public string LastName { get; set; }
+        public string LastName { get; set; } = string.Empty;
+
+            [MaxLength(HashLenght)]
+        public string Password { get; set; } = string.Empty;
         
-        [MaxLength(HashLenght)]
-        public string Password { get; set; }
-        
-        public string RoleId { get; set; }
+        public string RoleId { get; set; } = string.Empty;
         
         public virtual Role Role { get; set; } = null!;
         
