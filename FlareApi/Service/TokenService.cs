@@ -25,7 +25,7 @@ namespace FlareApi.Service
            
             var claims = new List<Claim>
             {
-                new(ClaimTypes.Role, user.RoleNav.Name),
+                new(ClaimTypes.Role, user.Role.Name),
                 new(JwtRegisteredClaimNames.Sub, user.Uen),
                 new(JwtRegisteredClaimNames.Jti, tokenId.ToString()),
             };

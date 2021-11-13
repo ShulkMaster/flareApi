@@ -33,13 +33,13 @@ namespace FlareApi.Entities
         
         public string RoleId { get; set; }
         
-        public virtual Role RoleNav { get; set; } = null!;
+        public virtual Role Role { get; set; } = null!;
         
         public int DepartmentId { get; set; }
         
-        public virtual Department DepartmentNav { get; set; } = null!;
+        public virtual Department Department { get; set; } = null!;
 
-        public bool Active { get; set; } = true;
+        public bool Active { get; set; }
 
         public DateTime? ReactivationDate { get; set; }
 

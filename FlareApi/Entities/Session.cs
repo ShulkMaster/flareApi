@@ -13,6 +13,6 @@ namespace FlareApi.Entities
         [ForeignKey(nameof(User.Uen))]
         public string Uen { get; set; } = string.Empty;
 
-        public User UserNav { get; set; } = null!;
+        public virtual User User { get; set; } = null!;
     }
 }

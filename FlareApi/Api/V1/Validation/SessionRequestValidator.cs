@@ -11,7 +11,7 @@ namespace FlareApi.Api.V1.Validation
         
         public SessionRequestValidator()
         {
-            RuleFor(rq => rq.Nue)
+            RuleFor(rq => rq.Uen)
                 .NotEmpty()
                 .MinimumLength(User.UenMinLenght)
                 .MaximumLength(User.UenLenght)
