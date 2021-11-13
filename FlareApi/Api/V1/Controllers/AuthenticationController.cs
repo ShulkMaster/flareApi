@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using AutoMapper;
+using AutoWrapper.Wrappers;
+using FlareApi.Api.V1.DataAccess;
 using FlareApi.Api.V1.Request;
 using FlareApi.Api.V1.Responses;
 using FlareApi.Config;
-using FlareApi.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,29 +14,38 @@ namespace FlareApi.Api.V1.Controllers
     [Route(Routes.AuthRouteV1)]
     public class AuthenticationController : FlareController
     {
-        [HttpPost]
-        [ProducesResponseType(typeof(ApiResponse<UserSession>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(IEnumerable<ApiError>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<UserSession>> Login([FromBody] SessionRequest request)
-        {
-            var user = new UserInfo(
-                Nue: request.Nue,
-                Name: "Jhon",
-                LastName: "Doe",
-                Active: true,
-                Department: new Department
-                {
-                    Id = 1,
-                    Name = "Sales"
-                },
-                Role: new Role
-                {
-                    Name = FlarePolicy.Regular,
-                    AccessLevel = Role.Regular
-                }
-            );
+        private readonly IUserRepository _repo;
 
-            return Ok(new UserSession("myApiToken", "myRefreshToken", user));
+        public AuthenticationController(IUserRepository repo)
+        {
+            _repo = repo;
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiProblemDetailsException), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Login([FromBody] SessionRequest request, [FromServices] IMapper mapper)
+        {
+            var user = await _repo.FindUserAsync(request.Uen);
+            if (user is null)
+            {
+                return new NotFoundObjectResult(new ApiProblemDetailsException(StatusCodes.Status404NotFound)
+                {
+                    Data = { { "error", $"User with UEN {request.Uen} not found" } }
+                });
+            }
+
+            if (user.Password != request.Password)
+            {
+                return new UnauthorizedObjectResult(new ApiProblemDetailsException(StatusCodes.Status401Unauthorized)
+                {
+                    Data = { { "error", $"User name/password combination is not correct" } }
+                });
+            }
+
+            var (token, refresh) = await _repo.CreateSessionAsync(user);
+            var session = new UserSession(token, refresh.ToString(), mapper.Map<UserInfo>(user));
+            return Ok(new ApiResponse(session));
         }
     }
 }
