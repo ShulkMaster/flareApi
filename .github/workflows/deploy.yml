@@ -19,7 +19,8 @@ jobs:
         workflow: dotnet.yml
         name: artifact
     - name: Printing Fun
-      run: ".github/setup.sh"
-      env: 
+      run: ./.github/setup.sh
+      shell: bash
+      env:
         APP_SETTINGS: ${{secrets.APP_SETTINGS}}
     
