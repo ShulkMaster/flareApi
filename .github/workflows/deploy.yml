@@ -20,8 +20,12 @@ jobs:
         workflow: dotnet.yml
         name: artifact
         path: build
+    - name: LS ing
+      run: |
+        ls
+        echo $PWD
     - name: Printing Fun
-      run: scripts/setup.sh
+      run: ./scripts/setup.sh
       shell: bash
       env:
         APP_SETTINGS: ${{secrets.APP_SETTINGS}}
