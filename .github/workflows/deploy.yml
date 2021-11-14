@@ -19,10 +19,7 @@ jobs:
         workflow: dotnet.yml
         name: artifact
     - name: Printing Fun
-      run: |
-        ls
-        echo ${{secrets.APP_SETTINGS}} > appsettings.json
-        cat appsettings.json
-    - name: The End
       run: ".github/setup.sh"
+      env: 
+        APP_SETTINGS: ${{secrets.APP_SETTINGS}}
     
