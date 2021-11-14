@@ -34,7 +34,7 @@ jobs:
         passphrase: ${{secrets.SSH_FRASE}}
         source: deploy/*
         overwrite: true
-        target: /var/www/flareApi/dep
+        target: /var/www/flareApi
     - name: SSH Remote
       uses: appleboy/ssh-action@v0.1.4
       env:
@@ -47,4 +47,11 @@ jobs:
         script_stop: true
         script: |
           echo "this is on the remote $REMOTE_USER $GITHUB_WORKFLOW $GITHUB_RUN_ID" > /var/www/flareApi/file.txt
+          systemctl stop flare.service
+          cd /var/www/flareApi
+          rm -v *.dll *.json FlareApi FlareApi.pdb
+          rm -rv runtimes/
+          mv deploy/* .
+          rmdir deploy/
+          systemctl start flare.service
         envs: REMOTE_USER,GITHUB_WORKFLOW,GITHUB_RUN_ID
