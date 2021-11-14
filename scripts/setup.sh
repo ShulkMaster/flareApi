@@ -1,4 +1,5 @@
-echo "The File end"
+echo "Setup star"
+echo "$APP_SETTINGS"
 echo "$APP_SETTINGS" > build/appsettings.json
-cat build/appsettings.json
 tar -zcvf archive.tar.gz -C build/ .
+cat build/appsettings.json
