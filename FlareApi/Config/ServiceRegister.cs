@@ -52,6 +52,7 @@ namespace FlareApi.Config
         public static void AddServiceLayer(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ISessionRepository, SessionRepository>();
             services.AddTransient<ITokenService, TokenService>();
             services.AddAutoMapper(typeof(Startup));
         }
