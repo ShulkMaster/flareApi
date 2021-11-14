@@ -1,0 +1,29 @@
+name: Deploy
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v2.0.10
+      with:
+        name: artifact
+        path: ./
+    - name: Printing Fun
+    - run: |
+        ls
+        echo ${{APP_SETTINGS}} > appsettings.json
+        cat appsettings.json
+    - name: The End    
+    
