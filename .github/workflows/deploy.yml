@@ -35,5 +35,9 @@ jobs:
         passphrase: ${{secrets.SSH_FRASE}}
         key: ${{secrets.SSH_KEY}}
         script_stop: true
-        script: ./scripts/upgrade.sh
-        envs: REMOTE_USER
+        script: |
+          echo "this is on the remote $GITHUB_WORKFLOW $GITHUB_RUN_ID" > file.txt
+          echo "$REMOTE_USER"
+          scp archive.tar.gz "$REMOTE_USER"@sovize.com:/var/www
+          tar -xzvf /var/www/archive.tar.gz
+        envs: REMOTE_USER,GITHUB_WORKFLOW,GITHUB_RUN_ID
