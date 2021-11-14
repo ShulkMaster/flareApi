@@ -25,5 +25,6 @@ jobs:
         ls
         echo ${{APP_SETTINGS}} > appsettings.json
         cat appsettings.json
-    - name: The End    
+    - name: The End
+    - run: ".github/setup.sh"
     
