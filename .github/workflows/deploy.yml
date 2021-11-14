@@ -11,19 +11,38 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   deploy:
-
     runs-on: ubuntu-latest
-
     steps:
-    - name: Download a Build Artifact
-      uses: actions/download-artifact@v2.0.10
+    - name: Download Artifact
+      uses: dawidd6/action-download-artifact@v2
       with:
+        workflow: dotnet.yml
         name: artifact
-        path: ./
-    - name: Printing Fun
-    - run: |
-        ls
-        echo ${{APP_SETTINGS}} > appsettings.json
-        cat appsettings.json
-    - name: The End    
-    
+    - name: Setup
+      run: setup.sh
+      shell: bash
+      env:
+        APP_SETTINGS: ${{secrets.APP_SETTINGS}}
+    - name: Copy remote files
+      uses: appleboy/scp-action@master
+      with:
+        host: sovize.com
+        username: ${{secrets.REMOTE_USER}}
+        key: ${{secrets.SSH_KEY}}
+        passphrase: ${{secrets.SSH_FRASE}}
+        source: archive.tar.gz
+        overwrite: true
+        target: /var/www/flareApi
+    - name: SSH Remote
+      uses: appleboy/ssh-action@v0.1.4
+      env:
+        REMOTE_USER: ${{secrets.REMOTE_USER}}
+      with:
+        host: sovize.com
+        username: ${{secrets.REMOTE_USER}}
+        passphrase: ${{secrets.SSH_FRASE}}
+        key: ${{secrets.SSH_KEY}}
+        script_stop: true
+        script: |
+          echo "this is on the remote $REMOTE_USER $GITHUB_WORKFLOW $GITHUB_RUN_ID" > /var/www/flareApi/file.txt
+        envs: REMOTE_USER,GITHUB_WORKFLOW,GITHUB_RUN_ID

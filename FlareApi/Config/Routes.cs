@@ -10,7 +10,7 @@ namespace FlareApi.Config
 
     #region V1
 
-        private const string V1 = "/v1";
+        private const string V1 = "/api/v1";
         public const string AuthRouteV1 = V1 + AuthRoute;
         public const string UserRouteV1 = V1 + UserRoute;
         public const string DepartmentRouteV1 = V1 + DepartmentRoute;
