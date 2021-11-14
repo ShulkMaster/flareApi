@@ -31,7 +31,7 @@ namespace FlareApi.Api.V1.Controllers
             {
                 return NotFound($"User with UEN {request.Uen} not found");
             }
-            
+
             if (ex is not null)
             {
                 return Unauthorized(ex.Message);
@@ -40,6 +40,13 @@ namespace FlareApi.Api.V1.Controllers
             var (token, refresh) = await _repo.CreateSessionAsync(user);
             var session = new UserSession(token, refresh.ToString(), mapper.Map<UserInfo>(user));
             return Ok(new ApiResponse(session));
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+        public IActionResult Test()
+        {
+            return Ok(new ApiResponse("This is working XD"));
         }
     }
 }
