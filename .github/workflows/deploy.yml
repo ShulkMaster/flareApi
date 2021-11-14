@@ -4,7 +4,7 @@ name: Deploy
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["CI"]
+    workflows: [ "CI" ]
     types:
       - completed
 
@@ -24,9 +24,11 @@ jobs:
       run: |
         ls
         echo $PWD
-    - name: Printing Fun
-      run: ./scripts/setup.sh
-      shell: bash
+    - name: Configure Settings
+      uses: actions/github-script@v5.0.0
+      with:
+        script: scripts/setup.sh
+        debug: true
       env:
         APP_SETTINGS: ${{secrets.APP_SETTINGS}}
     
