@@ -14,14 +14,13 @@ namespace FlareApi.Config
     public class Startup
     {
         private readonly IWebHostEnvironment _env;
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             _env = env;
             Configuration = configuration;
         }
-
 
 
         public void ConfigureServices(IServiceCollection services)
