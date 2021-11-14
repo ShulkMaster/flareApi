@@ -18,6 +18,8 @@ jobs:
       with:
         workflow: dotnet.yml
         name: artifact
+    - name: Adding Execute Permission
+      run: chmod -R 711 scripts/
     - name: Setup
       run: scripts/setup.sh
       shell: bash
