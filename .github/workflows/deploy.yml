@@ -32,9 +32,9 @@ jobs:
         username: ${{secrets.REMOTE_USER}}
         key: ${{secrets.SSH_KEY}}
         passphrase: ${{secrets.SSH_FRASE}}
-        source: archive.tar.gz
+        source: deploy/*
         overwrite: true
-        target: /var/www/flareApi
+        target: /var/www/flareApi/dep
     - name: SSH Remote
       uses: appleboy/ssh-action@v0.1.4
       env:

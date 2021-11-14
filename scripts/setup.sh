@@ -1,5 +1,4 @@
 echo "Setup star"
-echo "$APP_SETTINGS" > build/appsettings.json
-tar -zcvf archive.tar.gz -C build/ .
-cat build/appsettings.json
-ls
+echo "$APP_SETTINGS" > deploy/appsettings.json
+cat deploy/appsettings.json
+ls deploy
