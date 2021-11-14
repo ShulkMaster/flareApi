@@ -49,8 +49,8 @@ jobs:
           echo "this is on the remote $REMOTE_USER $GITHUB_WORKFLOW $GITHUB_RUN_ID" > /var/www/flareApi/file.txt
           systemctl stop flare.service
           cd /var/www/flareApi
-          rm -v *.dll *.json FlareApi FlareApi.pdb
-          rm -rv runtimes/
+          rm -vf *.dll *.json FlareApi FlareApi.pdb
+          rm -rfv runtimes/
           mv deploy/* .
           rmdir deploy/
           systemctl start flare.service
