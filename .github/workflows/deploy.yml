@@ -55,6 +55,6 @@ jobs:
           rmdir deploy/
           chmod -R 711 .
           chmod -R 644 *.json
-          chown $REMOTE_USER:$REMOTE_USER
+          chown -v $REMOTE_USER:$REMOTE_USER *
           systemctl start flare.service
         envs: REMOTE_USER,GITHUB_WORKFLOW,GITHUB_RUN_ID
