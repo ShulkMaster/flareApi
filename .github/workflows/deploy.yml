@@ -4,7 +4,7 @@ name: Deploy
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: [ "CI" ]
+    workflows: ["CI"]
     types:
       - completed
 
@@ -20,15 +20,9 @@ jobs:
         workflow: dotnet.yml
         name: artifact
         path: build
-    - name: LS ing
-      run: |
-        ls
-        echo $PWD
-    - name: Configure Settings
-      uses: actions/github-script@v5.0.0
-      with:
-        script: scripts/setup.sh
-        debug: true
+    - name: Printing Fun
+      run: ./scripts/setup.sh
+      shell: bash
       env:
         APP_SETTINGS: ${{secrets.APP_SETTINGS}}
     
