@@ -25,4 +25,15 @@ jobs:
       shell: bash
       env:
         APP_SETTINGS: ${{secrets.APP_SETTINGS}}
-    
+    - name: SSH Remote
+      uses: appleboy/ssh-action@v0.1.4
+      env:
+        REMOTE_USER: ${{secrets.REMOTE_USER}}
+      with:
+        host: sovize.com
+        username: $REMOTE_USER
+        passphrase: ${{secrets.SSH_FRASE}}
+        key: ${{secrets.SSH_KEY}}
+        script_stop: true
+        script: ./scripts/upgrade.sh
+        envs: REMOTE_USER
