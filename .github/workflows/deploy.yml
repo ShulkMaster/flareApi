@@ -31,7 +31,7 @@ jobs:
         REMOTE_USER: ${{secrets.REMOTE_USER}}
       with:
         host: sovize.com
-        username: $REMOTE_USER
+        username: ${{secrets.REMOTE_USER}}
         passphrase: ${{secrets.SSH_FRASE}}
         key: ${{secrets.SSH_KEY}}
         script_stop: true
