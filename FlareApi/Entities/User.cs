@@ -45,5 +45,8 @@ namespace FlareApi.Entities
 
         public int FailedAttempts { get; set; }
 
+        public int Age { get; set; }
+
+        public Gender? Gender { get; set; }
     }
 }
