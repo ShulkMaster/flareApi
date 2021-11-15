@@ -10,5 +10,7 @@ namespace FlareApi.Api.V1.Responses
         public bool Active { get; init; }
         public Role Role { get; init; } = null!;
         public Department Department { get; init; } = null!;
+        public int Age { get; set; }
+        public Gender Gender { get; set; }
     }
 }

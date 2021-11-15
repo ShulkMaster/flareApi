@@ -1,9 +1,11 @@
-﻿namespace FlareApi.Api.V1.Responses
+﻿using System;
+
+namespace FlareApi.Api.V1.Responses
 {
     public record UserSession
     (
         string AccessToken,
-        string RefreshToken,
+        Guid RefreshToken,
         UserInfo User
     );
 }
