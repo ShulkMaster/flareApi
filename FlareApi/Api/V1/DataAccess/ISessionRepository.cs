@@ -8,5 +8,8 @@ namespace FlareApi.Api.V1.DataAccess
     {
         Task<(string, Guid)> CreateSessionAsync(User user);
         Task<(User?, Exception?)> FindUserAsync(string uen, string password);
+        Task<(string, Guid)> RefreshAsync(Session session);
+        Task<Session?> FindSessionAsync(string guid);
+        Task RevokeSessionAsync(string guid);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoWrapper.Wrappers;
 using FlareApi.Api.V1.DataAccess;
@@ -15,15 +16,18 @@ namespace FlareApi.Api.V1.Controllers
     public class AuthenticationController : FlareController
     {
         private readonly ISessionRepository _repo;
+        private readonly IMapper _mapper;
 
-        public AuthenticationController(ISessionRepository repo)
+        public AuthenticationController(ISessionRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         [HttpPost]
+        [ActionName("")]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Login([FromBody] SessionRequest request, [FromServices] IMapper mapper)
+        public async Task<IActionResult> Login([FromBody] SessionRequest request)
         {
             var (user, ex) = await _repo.FindUserAsync(request.Uen, request.Password);
 
@@ -38,15 +42,38 @@ namespace FlareApi.Api.V1.Controllers
             }
 
             var (token, refresh) = await _repo.CreateSessionAsync(user);
-            var session = new UserSession(token, refresh.ToString(), mapper.Map<UserInfo>(user));
+            var session = new UserSession(token, refresh, _mapper.Map<UserInfo>(user));
             return Ok(new ApiResponse(session));
         }
 
-        [HttpGet]
+        [HttpPatch]
+        [ActionName("")]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
-        public IActionResult Test()
+        public async Task<IActionResult> Refresh([FromBody] RefreshRequest request)
         {
-            return Ok(new ApiResponse("This is working XD"));
+            var session = await _repo.FindSessionAsync(request.refreshToken);
+            if (session is null)
+            {
+                return NotFound("Session not found");
+            }
+
+            if (session.Expiration >= DateTime.Now)
+            {
+                return Unauthorized("The session has already expired");
+            }
+
+            var (token, refresh) = await _repo.RefreshAsync(session);
+            var newSession = new UserSession(token, refresh, _mapper.Map<UserInfo>(session.User));
+            return Ok(new ApiResponse(newSession));
+        }
+
+        [HttpDelete]
+        [ActionName("")]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Revoke([FromBody] RefreshRequest request)
+        {
+            await _repo.RevokeSessionAsync(request.refreshToken);
+            return Ok(new ApiResponse("Session terminated"));
         }
     }
 }

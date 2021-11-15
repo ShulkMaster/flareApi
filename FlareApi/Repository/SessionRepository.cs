@@ -78,5 +78,34 @@ namespace FlareApi.Repository
             await _context.SaveChangesAsync();
             return (user, defaultError);
         }
+
+        public async Task<Session?> FindSessionAsync(string guid)
+        {
+            return await _context.Sessions
+                .Include(s => s.User)
+                .Include(s => s.User.Role)
+                .Include(s => s.User.Department)
+                .FirstOrDefaultAsync(s => s.Id.ToString() == guid);
+        }
+
+        public Task<(string, Guid)> RefreshAsync(Session session)
+        {
+            _context.Sessions.Remove(session);
+            return CreateSessionAsync(session.User);
+        }
+
+        public async Task RevokeSessionAsync(string guid)
+        {
+            var session = new Session
+            {
+                Id = Guid.Parse(guid)
+            };
+            _context.Entry(session).State = EntityState.Deleted;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException){}
+        }
     }
 }
