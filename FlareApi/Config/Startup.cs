@@ -34,6 +34,13 @@ namespace FlareApi.Config
             Configuration.GetSection(nameof(Settings)).Bind(settings);
             var loggerFactory = new LoggerFactory();
             loggerFactory.AddSerilog(serilog);
+            services.AddCors(c =>
+            {
+                c.AddDefaultPolicy(o => o.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                );
+            });
             services.AddMiddleware(settings);
             services.AddServiceLayer();
             services.AddSwag();
@@ -58,6 +65,7 @@ namespace FlareApi.Config
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FlareApi v1"));
+                app.UseCors();
             }
 
             app.UseHttpsRedirection();
@@ -67,7 +75,6 @@ namespace FlareApi.Config
                 UseCustomSchema = true
             });
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
