@@ -9,23 +9,23 @@ namespace FlareApi.Api.V1.Validation
     public class CreateUserRequestValidation : AbstractValidator<CreateUserRequest>
     {
         private readonly Regex _uen = new("en[a-z0-9]+", RegexOptions.IgnoreCase);
-        private readonly Regex _onlyLetters = new("[a-zñ]", RegexOptions.IgnoreCase);
+        private readonly Regex _onlyLetters = new("[a-zñ ]", RegexOptions.IgnoreCase);
 
         public CreateUserRequestValidation()
         {
-            RuleFor(u => u.Uen)
+            Transform(u => u.Uen, s => s.Trim())
                 .NotEmpty()
                 .MinimumLength(User.UenMinLenght)
                 .MaximumLength(User.UenLenght)
                 .Matches(_uen);
 
-            RuleFor(u => u.Name)
+            Transform(u => u.Name, s => s.Trim())
                 .NotEmpty()
                 .MaximumLength(User.NameLenght)
                 .MinimumLength(2)
                 .Matches(_onlyLetters);
 
-            RuleFor(u => u.LastName)
+            Transform(u => u.LastName, s => s.Trim())
                 .NotEmpty()
                 .MaximumLength(User.LastNameLenght)
                 .MinimumLength(2)

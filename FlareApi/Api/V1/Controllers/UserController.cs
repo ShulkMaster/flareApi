@@ -47,6 +47,14 @@ namespace FlareApi.Api.V1.Controllers
             return new ApiMetaResponse<UserInfo>(list, meta, pagination.Filter);
         }
 
+        [HttpGet("{uen}")]
+        public async Task<ActionResult> Find(string uen)
+        {
+            var user = await _repo.FindUserAsync(uen);
+            if (user is null) return NotFound("User not found");
+            return Ok(new ApiResponse(user));
+        }
+        
         [Authorize(Policy = nameof(FlarePolicy), Roles = Role.Admin)]
         [HttpPost]
         public async Task<ActionResult<UserInfo>> Index(
