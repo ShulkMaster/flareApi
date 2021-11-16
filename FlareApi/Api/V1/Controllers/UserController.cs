@@ -66,8 +66,8 @@ namespace FlareApi.Api.V1.Controllers
                 return new StatusCodeResult(500);
             }
 
-            var userInfo = _mapper.Map<UserInfo>(savedUser);
-
+            savedUser.Password = result.PlainText;
+            var userInfo = _mapper.Map<UserWithPassword>(savedUser);
             return Ok(new ApiResponse(userInfo));
         }
     }

@@ -76,9 +76,8 @@ namespace FlareApi.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("int")
-                        .HasDefaultValue(18);
+                    b.Property<DateTime?>("Birthday")
+                        .HasColumnType("datetime");
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");

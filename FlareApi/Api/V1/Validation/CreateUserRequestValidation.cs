@@ -22,13 +22,13 @@ namespace FlareApi.Api.V1.Validation
             RuleFor(u => u.Name)
                 .NotEmpty()
                 .MaximumLength(User.NameLenght)
-                .MaximumLength(2)
+                .MinimumLength(2)
                 .Matches(_onlyLetters);
 
             RuleFor(u => u.LastName)
                 .NotEmpty()
                 .MaximumLength(User.LastNameLenght)
-                .MaximumLength(2)
+                .MinimumLength(2)
                 .Matches(_onlyLetters);
 
             RuleFor(u => u.RoleId)

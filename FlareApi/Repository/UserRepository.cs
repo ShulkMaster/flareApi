@@ -83,7 +83,7 @@ namespace FlareApi.Repository
                 await _context.SaveChangesAsync();
                 return user;
             }
-            catch (DbException ex)
+            catch (DbUpdateException ex)
             {
                 return null;
             }

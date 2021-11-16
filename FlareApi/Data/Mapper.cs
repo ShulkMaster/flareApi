@@ -5,12 +5,13 @@ using FlareApi.Entities;
 
 namespace FlareApi.Data
 {
-    public class Mapper: Profile
+    public class Mapper : Profile
     {
         public Mapper()
         {
             CreateMap<User, UserInfo>();
             CreateMap<CreateUserRequest, User>();
+            CreateMap<User, UserWithPassword>();
         }
     }
 }

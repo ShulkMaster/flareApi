@@ -12,13 +12,5 @@ namespace FlareApi.Data
         public FlareContext(DbContextOptions options) : base(options)
         {
         }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<User>()
-                .Property(u => u.Age)
-                .HasDefaultValue(18);
-        }
     }
 }
