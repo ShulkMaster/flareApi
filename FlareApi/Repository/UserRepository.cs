@@ -81,6 +81,7 @@ namespace FlareApi.Repository
             {
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
+                await _context.Entry(user).Reference(r => r.Role).LoadAsync();
                 return user;
             }
             catch (DbUpdateException ex)
