@@ -8,11 +8,13 @@ using FlareApi.Api.V1.Responses;
 using FlareApi.Config;
 using FlareApi.Entities;
 using FlareApi.Service.Driver;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlareApi.Api.V1.Controllers
 {
+    [Authorize(Policy = nameof(FlarePolicy))]
     [ApiController]
     [Route(Routes.UserRouteV1)]
     public class UserController : FlareController
@@ -45,6 +47,7 @@ namespace FlareApi.Api.V1.Controllers
             return new ApiMetaResponse<UserInfo>(list, meta, pagination.Filter);
         }
 
+        [Authorize(Policy = nameof(FlarePolicy), Roles = Role.Admin)]
         [HttpPost]
         public async Task<ActionResult<UserInfo>> Index(
             [FromBody] CreateUserRequest request,

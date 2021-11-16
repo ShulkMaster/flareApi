@@ -9,13 +9,15 @@ namespace FlareApi.Entities
     #region Constants
 
         public const int NameLenght = 50;
-        public const int Regular = 1;
-        public const int Admin = 2;
+        public const int RegularLevel = 1;
+        public const int AdminLevel = 2;
+        public const string Regular = nameof(Regular);
+        public const string Admin = nameof(Admin);
 
     #endregion
 
-        public static readonly int[] AccessLevels = { Regular, Admin };
-        public static readonly string[] Roles = { "Regular", "Admin" };
+        public static readonly int[] AccessLevels = { RegularLevel, AdminLevel };
+        public static readonly string[] Roles = { Regular, Admin };
 
         [Key]
         [MaxLength(NameLenght)]

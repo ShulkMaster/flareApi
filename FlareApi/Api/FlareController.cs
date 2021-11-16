@@ -17,9 +17,9 @@ namespace FlareApi.Api
             var claim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
             return claim switch
             {
-                FlarePolicy.Regular => Role.Regular,
-                FlarePolicy.Admin => Role.Admin,
-                _ => Role.Regular
+                FlarePolicy.Regular => Role.RegularLevel,
+                FlarePolicy.Admin => Role.AdminLevel,
+                _ => Role.RegularLevel
             };
         }
         
