@@ -54,6 +54,7 @@ namespace FlareApi.Config
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ISessionRepository, SessionRepository>();
             services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<IPasswordService, PasswordService>();
             services.AddAutoMapper(typeof(Startup));
         }
 
