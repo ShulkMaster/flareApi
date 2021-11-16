@@ -15,6 +15,7 @@ namespace FlareApi.Entities
     #endregion
 
         public static readonly int[] AccessLevels = { Regular, Admin };
+        public static readonly string[] Roles = { "Regular", "Admin" };
 
         [Key]
         [MaxLength(NameLenght)]

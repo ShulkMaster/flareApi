@@ -7,6 +7,7 @@ namespace FlareApi.Data
     {
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Session> Sessions { get; set; } = null!;
+        public DbSet<Department> Departments { get; set; } = null!;
 
         public FlareContext(DbContextOptions options) : base(options)
         {
