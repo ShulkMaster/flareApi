@@ -1,4 +1,5 @@
-﻿using FlareApi.Entities;
+﻿using System.Threading.Tasks;
+using FlareApi.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace FlareApi.Service.Driver

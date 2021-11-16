@@ -9,5 +9,7 @@ namespace FlareApi.Api.V1.DataAccess
     {
         Task<User?> FindUserAsync(string uen);
         IOrderedQueryable<User> FindUsers(UserPagination pagination);
+        Task<Department?> FindDepartmentAsync(int departmentId);
+        public Task<User?> SaveUserAsync(User user);
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Data.Common;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using FlareApi.Api.V1.DataAccess;
@@ -71,6 +73,25 @@ namespace FlareApi.Repository
                 UserSort.RoleDesc => users.OrderByDescending(u => u.RoleId),
                 _ => users.OrderBy(u => u.Uen),
             };
+        }
+
+        public async Task<User?> SaveUserAsync(User user)
+        {
+            try
+            {
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+                return user;
+            }
+            catch (DbException ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<Department?> FindDepartmentAsync(int departmentId)
+        {
+            return await _context.Departments.FindAsync(departmentId);
         }
     }
 }
