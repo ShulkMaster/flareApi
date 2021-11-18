@@ -11,5 +11,6 @@ namespace FlareApi.Api.V1.DataAccess
         IOrderedQueryable<User> FindUsers(UserPagination pagination);
         Task<Department?> FindDepartmentAsync(int departmentId);
         public Task<User?> SaveUserAsync(User user);
+        public Task<User?> UpdateUserAsync(User user);
     }
 }

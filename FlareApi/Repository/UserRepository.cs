@@ -87,6 +87,20 @@ namespace FlareApi.Repository
                 return null;
             }
         }
+        
+        public async Task<User?> UpdateUserAsync(User user)
+        {
+            try
+            {
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+                return user;
+            }
+            catch (DbUpdateException ex)
+            {
+                return null;
+            }
+        }
 
         public async Task<Department?> FindDepartmentAsync(int departmentId)
         {
