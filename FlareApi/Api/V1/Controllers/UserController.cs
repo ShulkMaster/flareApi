@@ -54,7 +54,8 @@ namespace FlareApi.Api.V1.Controllers
         {
             var user = await _repo.FindUserAsync(uen);
             if (user is null) return NotFound("User not found");
-            return Ok(new ApiResponse(user));
+            var response = _mapper.Map<UserInfo>(user);
+            return Ok(new ApiResponse(response));
         }
 
         [HttpPost]
@@ -114,7 +115,10 @@ namespace FlareApi.Api.V1.Controllers
             {
                 return new StatusCodeResult(500);
             }
-            return Ok(new ApiResponse(savedUser));
+
+            var response = _mapper.Map<UserInfo>(savedUser);
+            
+            return Ok(new ApiResponse(response));
         }
     }
 }
