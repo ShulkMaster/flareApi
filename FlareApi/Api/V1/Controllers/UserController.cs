@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoWrapper.Wrappers;
@@ -54,7 +56,7 @@ namespace FlareApi.Api.V1.Controllers
             if (user is null) return NotFound("User not found");
             return Ok(new ApiResponse(user));
         }
-        
+
         [HttpPost]
         [Authorize(Policy = nameof(FlarePolicy), Roles = Role.Admin)]
         public async Task<ActionResult<UserInfo>> Index(
@@ -80,6 +82,39 @@ namespace FlareApi.Api.V1.Controllers
             savedUser.Password = result.PlainText;
             var userInfo = _mapper.Map<UserWithPassword>(savedUser);
             return Ok(new ApiResponse(userInfo));
+        }
+
+
+        [HttpPatch("{uen}")]
+        [Authorize(Policy = nameof(FlarePolicy), Roles = Role.Admin)]
+        public async Task<ActionResult<UserInfo>> UpdateUser(string uen, [FromBody] UpdateUserRequest request)
+        {
+            var normalizeUen = uen.Trim().ToUpper(CultureInfo.InvariantCulture);
+            if (normalizeUen.Length < 2 || !normalizeUen.StartsWith("en", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return BadRequest("Invalid UEN, all UEN starts with EN");
+            }
+
+            var department = await _repo.FindDepartmentAsync(request.DepartmentId);
+            if (department is null)
+            {
+                return NotFound($"El departamento con el id {request.DepartmentId} no se encontro");
+            }
+
+            var user = await _repo.FindUserAsync(normalizeUen);
+
+            if (user is null)
+            {
+                return NotFound($"User {normalizeUen} not found");
+            }
+
+            var updateUser = _mapper.Map(request, user);
+            var savedUser = await _repo.UpdateUserAsync(updateUser);
+            if (savedUser is null)
+            {
+                return new StatusCodeResult(500);
+            }
+            return Ok(new ApiResponse(savedUser));
         }
     }
 }
