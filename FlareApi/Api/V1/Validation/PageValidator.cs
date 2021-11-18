@@ -22,10 +22,10 @@ namespace FlareApi.Api.V1.Validation
         public ZeroPageValidator()
         {
             RuleFor(p => p.Page)
-                .GreaterThanOrEqualTo(0);
+                .GreaterThanOrEqualTo(1);
 
             RuleFor(p => p.Size)
-                .GreaterThanOrEqualTo(1)
+                .GreaterThanOrEqualTo(0)
                 .LessThanOrEqualTo(100);
         }
     }
