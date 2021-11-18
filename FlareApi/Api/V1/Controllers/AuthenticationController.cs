@@ -57,7 +57,7 @@ namespace FlareApi.Api.V1.Controllers
                 return NotFound("Session not found");
             }
 
-            if (session.Expiration >= DateTime.Now)
+            if (session.Expiration <= DateTime.Now)
             {
                 return Unauthorized("The session has already expired");
             }
