@@ -11,4 +11,12 @@
         Role,
         RoleDesc,
     }
+    
+    public enum DepartmentSort
+    {
+        Id,
+        IdDesc,
+        Name,
+        NameDesc,
+    }
 }

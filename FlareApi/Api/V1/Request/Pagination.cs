@@ -19,4 +19,17 @@
             public string? RoleId { get; set; }
         }
     }
+
+    public class DepartmentPagination : ZeroPageRequest
+    {
+        public DepartmentFilter Filter { get; set; } = new();
+
+        public DepartmentSort? Sort = DepartmentSort.Name;
+        
+        public class DepartmentFilter
+        {
+            public string? NameContains { get; set; }
+            
+        }
+    }
 }

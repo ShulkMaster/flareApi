@@ -14,9 +14,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FlareApi.Api.V1.Controllers
 {
-    [Authorize(Policy = nameof(FlarePolicy))]
     [ApiController]
     [Route(Routes.UserRouteV1)]
+    [Authorize(Policy = nameof(FlarePolicy))]
     public class UserController : FlareController
     {
         private readonly IUserRepository _repo;
@@ -55,8 +55,8 @@ namespace FlareApi.Api.V1.Controllers
             return Ok(new ApiResponse(user));
         }
         
-        [Authorize(Policy = nameof(FlarePolicy), Roles = Role.Admin)]
         [HttpPost]
+        [Authorize(Policy = nameof(FlarePolicy), Roles = Role.Admin)]
         public async Task<ActionResult<UserInfo>> Index(
             [FromBody] CreateUserRequest request,
             [FromServices] IPasswordService password)
