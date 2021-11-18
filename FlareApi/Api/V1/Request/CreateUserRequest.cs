@@ -3,10 +3,8 @@ using FlareApi.Entities;
 
 namespace FlareApi.Api.V1.Request
 {
-    public class CreateUserRequest
+    public class UpdateUserRequest
     {
-        public string Uen { get; set; } = string.Empty;
-
         public string Name { get; set; } = string.Empty;
 
         public string LastName { get; set; } = string.Empty;
@@ -18,5 +16,10 @@ namespace FlareApi.Api.V1.Request
         public Gender? Gender { get; set; }
 
         public int DepartmentId { get; set; }
+    }
+
+    public class CreateUserRequest : UpdateUserRequest
+    {
+        public string Uen { get; set; } = string.Empty;
     }
 }

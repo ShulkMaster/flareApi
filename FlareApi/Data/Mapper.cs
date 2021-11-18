@@ -10,8 +10,9 @@ namespace FlareApi.Data
         public Mapper()
         {
             CreateMap<User, UserInfo>();
-            CreateMap<CreateUserRequest, User>();
             CreateMap<User, UserWithPassword>();
+            CreateMap<CreateUserRequest, User>();
+            CreateMap<UpdateUserRequest, User>();
         }
     }
 }

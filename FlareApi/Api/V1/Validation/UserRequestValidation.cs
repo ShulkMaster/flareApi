@@ -6,19 +6,12 @@ using FluentValidation;
 
 namespace FlareApi.Api.V1.Validation
 {
-    public class CreateUserRequestValidation : AbstractValidator<CreateUserRequest>
+    public class UpdateUserRequestValidation : AbstractValidator<UpdateUserRequest>
     {
-        private readonly Regex _uen = new("en[a-z0-9]+", RegexOptions.IgnoreCase);
         private readonly Regex _onlyLetters = new("[a-zñ ]", RegexOptions.IgnoreCase);
 
-        public CreateUserRequestValidation()
+        public UpdateUserRequestValidation()
         {
-            Transform(u => u.Uen, s => s.Trim())
-                .NotEmpty()
-                .MinimumLength(User.UenMinLenght)
-                .MaximumLength(User.UenLenght)
-                .Matches(_uen);
-
             Transform(u => u.Name, s => s.Trim())
                 .NotEmpty()
                 .MaximumLength(User.NameLenght)
@@ -36,6 +29,23 @@ namespace FlareApi.Api.V1.Validation
 
             RuleFor(u => u.DepartmentId)
                 .GreaterThanOrEqualTo(1);
+        }
+    }
+
+    public class CreateUserRequestValidation : AbstractValidator<CreateUserRequest>
+    {
+        private readonly Regex _uen = new("en[a-z0-9]+", RegexOptions.IgnoreCase);
+
+
+        public CreateUserRequestValidation()
+        {
+            Include(new UpdateUserRequestValidation());
+
+            Transform(u => u.Uen, s => s.Trim())
+                .NotEmpty()
+                .MinimumLength(User.UenMinLenght)
+                .MaximumLength(User.UenLenght)
+                .Matches(_uen);
         }
     }
 }
