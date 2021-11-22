@@ -53,11 +53,16 @@ namespace FlareApi.Repository
             };
 
             var uen = pagination.Filter.UenContains;
-            users = uen switch
+            if (!string.IsNullOrWhiteSpace(uen))
             {
-                not null => users.Where(u => EF.Functions.Like(u.Uen, $"%{uen}%")),
-                _ => users
-            };
+                users = users.Where(u => EF.Functions.Like(u.Uen, $"%{uen}%"));
+            }
+
+            var name = pagination.Filter.NameContains;
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                users = users.Where(u => EF.Functions.Like(u.Name, $"%{name}%"));
+            }
 
             return pagination.Sort switch
             {
@@ -82,12 +87,12 @@ namespace FlareApi.Repository
                 await _context.Entry(user).Reference(r => r.Role).LoadAsync();
                 return user;
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return null;
             }
         }
-        
+
         public async Task<User?> UpdateUserAsync(User user)
         {
             try
@@ -96,7 +101,7 @@ namespace FlareApi.Repository
                 await _context.SaveChangesAsync();
                 return user;
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return null;
             }
