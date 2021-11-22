@@ -70,10 +70,12 @@ namespace FlareApi.Repository
                 UserSort.NameDesc => users.OrderByDescending(u => u.Name),
                 UserSort.Uen => users.OrderBy(u => u.Uen),
                 UserSort.UenDesc => users.OrderByDescending(u => u.Uen),
-                UserSort.Department => users.OrderBy(u => u.DepartmentId),
-                UserSort.DepartmentDesc => users.OrderByDescending(u => u.DepartmentId),
+                UserSort.Department => users.OrderBy(u => u.Department.Name),
+                UserSort.DepartmentDesc => users.OrderByDescending(u => u.Department.Name),
                 UserSort.Role => users.OrderBy(u => u.RoleId),
                 UserSort.RoleDesc => users.OrderByDescending(u => u.RoleId),
+                UserSort.Birthday => users.OrderBy(u => u.Birthday),
+                UserSort.BirthdayDesc => users.OrderByDescending(u => u.Birthday),
                 _ => users.OrderBy(u => u.Uen),
             };
         }

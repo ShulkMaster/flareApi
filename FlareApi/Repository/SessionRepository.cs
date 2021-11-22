@@ -4,6 +4,7 @@ using FlareApi.Api.V1.DataAccess;
 using FlareApi.Data;
 using FlareApi.Entities;
 using FlareApi.Service.Driver;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -14,12 +15,19 @@ namespace FlareApi.Repository
         private readonly FlareContext _context;
         private readonly ITokenService _tokenService;
         private readonly ILogger<SessionRepository> _logger;
+        private readonly IPasswordService _pService;
 
-        public SessionRepository(FlareContext context, ITokenService tokenService, ILogger<SessionRepository> logger)
+        public SessionRepository(
+            FlareContext context,
+            ITokenService tokenService,
+            ILogger<SessionRepository> logger,
+            IPasswordService pService
+        )
         {
             _context = context;
             _tokenService = tokenService;
             _logger = logger;
+            _pService = pService;
         }
 
         public async Task<(string, Guid)> CreateSessionAsync(User user)
@@ -66,7 +74,9 @@ namespace FlareApi.Repository
                 );
             }
 
-            if (user.Password == password)
+            var decrypted = _pService.VerifyHashedPassword(user, user.Password, password);
+
+            if (decrypted != PasswordVerificationResult.Failed)
             {
                 user.FailedAttempts = 0;
                 await _context.SaveChangesAsync();
@@ -105,7 +115,9 @@ namespace FlareApi.Repository
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException){}
+            catch (DbUpdateConcurrencyException)
+            {
+            }
         }
     }
 }

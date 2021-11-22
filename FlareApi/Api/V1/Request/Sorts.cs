@@ -10,6 +10,8 @@
         DepartmentDesc,
         Role,
         RoleDesc,
+        Birthday,
+        BirthdayDesc,
     }
     
     public enum DepartmentSort
